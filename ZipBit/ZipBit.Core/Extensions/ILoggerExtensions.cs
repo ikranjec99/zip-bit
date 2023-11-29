@@ -17,6 +17,9 @@ namespace ZipBit.Core.Extensions
                 parameters
             );
 
+        public static void LogShortenUrlUniqueConstraintViolation(this ILogger logger, string url)
+            => logger.LogError("Unique constraint violation - generated shortened url {Url} already exists", url);
+
         public static void LogTryShortenUrl(this ILogger logger, string url)
             => logger.LogInformation("Trying to shorten url {Url}", url);
 
