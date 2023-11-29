@@ -1,0 +1,22 @@
+﻿using ZipBit.Core.DataAccess.ZipBitDb.Models;
+
+namespace ZipBit.Core.DataAccess.ZipBitDb.Interfaces
+{
+    public interface IUrlRepository
+    {
+        /// <summary>
+        /// Create shortened url
+        /// </summary>
+        /// <param name="urlOriginal"></param>
+        /// <param name="urlShortened"></param>
+        /// <returns>Returns id of created shortened url</returns>
+        Task<long> Add(string urlOriginal, string urlShortened);
+
+        /// <summary>
+        /// Get Url entity by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Returns url entity by id</returns>
+        Task<Url> GetById(long id);
+    }
+}
