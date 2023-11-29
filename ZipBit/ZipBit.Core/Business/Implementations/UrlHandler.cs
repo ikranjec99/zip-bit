@@ -3,6 +3,7 @@ using ZipBit.Core.Business.Interfaces;
 using ZipBit.Core.Business.Models;
 using ZipBit.Core.Configuration;
 using ZipBit.Core.DataAccess.ZipBitDb.Interfaces;
+using ZipBit.Core.Extensions;
 
 namespace ZipBit.Core.Business.Implementations
 {
@@ -23,10 +24,12 @@ namespace ZipBit.Core.Business.Implementations
         {
             try
             {
+                _logger.LogTryShortenUrl(request.UrlOriginal);
                 string urlShortened = GenerateShortenedUrl();
                 long id = await _urlRepository.Add(request.UrlOriginal, urlShortened);
 
                 var createdShortenedUrl = await _urlRepository.GetById(id);
+                _logger.LogUrlShortened(createdShortenedUrl.UrlOriginal, createdShortenedUrl.UrlShortened);
 
                 return new CreateShortenedUrlResponse { UrlShortened = createdShortenedUrl.UrlShortened };
             }
