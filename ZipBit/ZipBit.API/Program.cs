@@ -1,27 +1,25 @@
+using Newtonsoft.Json;
+using Serilog;
+using ZipBit.API.Extensions;
+using ZipBit.API.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add webhost config
+builder.WebHost.Configure();
+builder.Host.UseSerilog();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var configuration = builder.Configuration;
+var appSettings = configuration.Get<AppSettings>();
+
+Console.WriteLine(JsonConvert.SerializeObject(appSettings, Formatting.Indented));
+
+// Add services to the contianer.
+builder.Services.AddServices(configuration, appSettings);
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.ConfigureMiddlewares();
 
 app.MapControllers();
 
