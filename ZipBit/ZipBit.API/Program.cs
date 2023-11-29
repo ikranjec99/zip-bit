@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Serilog;
 using ZipBit.API.Extensions;
 using ZipBit.API.Settings;
 
@@ -7,7 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add webhost config
 builder.WebHost.Configure();
-builder.Host.UseSerilog();
+
+// Add host config
+builder.Host.Configure();
 
 var configuration = builder.Configuration;
 var appSettings = configuration.Get<AppSettings>();

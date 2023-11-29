@@ -35,8 +35,8 @@ namespace ZipBit.Core.DataAccess
                 return;
 
             var statistics = _sqlConnection.RetrieveStatistics();
-            _logger.LogDebug(
-                "ScriptName: {ScriptName}, Execution time: {ExecutionTime}ms, ConnectionTime: {ConnectionTime}ms, NetworkServerTime: {NetworkServerTime}ms, Parameters: {@Parameters}",
+            
+            _logger.LogSqlConnection(
                 _sql.FirstLine().Replace("--", string.Empty),
                 statistics[ExecutionTime],
                 statistics[ConnectionTime],
