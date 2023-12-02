@@ -1,9 +1,7 @@
 ﻿namespace ZipBit.Core.Business.Models
 {
-    public class CreateShortenedUrlRequest
+    public class UrlResponse
     {
-        public long DomainId {  get; set; }
-        
         public required string Url { get; set; }
     }
 }

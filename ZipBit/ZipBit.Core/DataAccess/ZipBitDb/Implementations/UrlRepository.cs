@@ -18,19 +18,31 @@ namespace ZipBit.Core.DataAccess.ZipBitDb.Implementations
             _sqlLogger = sqlLogger;
         }
 
-        public async Task<long> Add(string urlOriginal, string urlShortened)
+        public async Task<long> Add(string code, long domainId, string urlOriginal)
         {
             using var sqlConnection = new SqlConnection(_connectionString);
             string sql = ZipBitDbLoader.Load("InsertUrl");
 
             var parameters = new InsertUrlParameters
             {
-                UrlOriginal = urlOriginal,
-                UrlShortened = urlShortened
+                Code = code,
+                DomainId = domainId,
+                UrlOriginal = urlOriginal
             };
 
             using var _ = _sqlLogger.Log(sqlConnection, sql, parameters);
             return await sqlConnection.ExecuteScalarAsync<long>(sql, parameters);
+        }
+
+        public async Task<Url> GetByCode(string code)
+        {
+            using var sqlConnection = new SqlConnection(_connectionString);
+            string sql = ZipBitDbLoader.Load("SelectUrlByCode");
+
+            var parameters = new SelectUrlByCodeParameters { Code = code };
+
+            using var _ = _sqlLogger.Log(sqlConnection, sql, parameters);
+            return await sqlConnection.QuerySingleOrDefaultAsync<Url>(sql, parameters);
         }
 
         public async Task<Url> GetById(long id)
