@@ -25,6 +25,7 @@ namespace ZipBit.API.Extensions
 
         private static IServiceCollection AddDataAccessLayer(this IServiceCollection services) =>
             services
+                .AddSingleton<IDomainRepository, DomainRepository>()
                 .AddSingleton<IUrlRepository, UrlRepository>()
                 .AddSingleton<ISqlLogger, SqlLogger>();
 
