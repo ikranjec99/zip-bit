@@ -5,6 +5,7 @@ using Microsoft.Net.Http.Headers;
 using MediaType = ZipBit.Core.Business.Constants.MediaType;
 using System.Net;
 using Newtonsoft.Json;
+using ZipBit.Core.Business.Exceptions;
 
 namespace ZipBit.API.Filters
 {
@@ -35,6 +36,12 @@ namespace ZipBit.API.Filters
 
         internal static HttpStatusCode MapExceptionToStatusCode(Exception e) => e switch
         {
+            DomainNotFoundException or
+            UrlNotFoundException
+            => HttpStatusCode.NotFound,
+
+            DomainAlreadyExistsException => HttpStatusCode.UnprocessableEntity,
+
             NotImplementedException => HttpStatusCode.NotImplemented,
 
             _ => HttpStatusCode.InternalServerError
