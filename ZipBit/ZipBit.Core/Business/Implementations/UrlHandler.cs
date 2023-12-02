@@ -1,6 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using ZipBit.Core.Business.Constants;
+﻿using Microsoft.Extensions.Logging;
+using ZipBit.Core.Business.Exceptions;
 using ZipBit.Core.Business.Interfaces;
 using ZipBit.Core.Business.Models;
 using ZipBit.Core.Configuration;
@@ -12,12 +11,14 @@ namespace ZipBit.Core.Business.Implementations
     public class UrlHandler : IUrlHandler
     {
         private readonly ILogger _logger;
+        private readonly IDomainRepository _domainRepository;
         private readonly IUrlRepository _urlRepository;
         private readonly IZipBitConfiguration _zipBitConfiguration;
 
-        public UrlHandler(ILogger<UrlHandler> logger, IUrlRepository urlRepository, IZipBitConfiguration zipBitConfiguration)
+        public UrlHandler(ILogger<UrlHandler> logger, IDomainRepository domainRepository, IUrlRepository urlRepository, IZipBitConfiguration zipBitConfiguration)
         {
             _logger = logger;
+            _domainRepository = domainRepository;
             _urlRepository = urlRepository;
             _zipBitConfiguration = zipBitConfiguration;
         }
@@ -26,13 +27,28 @@ namespace ZipBit.Core.Business.Implementations
         {
             try
             {
-                _logger.LogTryShortenUrl(request.UrlOriginal);
-                return await AddShortenedUrl(request);
+                string code = GenerateCode();
+                _logger.LogTryUrlShortening(code, request.Url, request.DomainId);
+
+                var domain = await _domainRepository.GetById(request.DomainId);
+
+                if (domain is null)
+                {
+                    _logger.LogDomainNotFound(request.DomainId);
+                    throw new DomainNotFoundException(request.DomainId);
+                }
+
+                long urlId = await _urlRepository.Add(code, request.DomainId, request.Url);
+                var url = await _urlRepository.GetById(urlId);
+
+                string urlShortened = $"{domain.Name}/{url.Code}";
+                _logger.LogUrlShortened(request.Url, urlShortened);
+
+                return new CreateShortenedUrlResponse { UrlShortened = urlShortened };
             }
-            catch (SqlException e) when (e.Number == (int)SqlViolation.UniqueConstraintViolation)
+            catch (BusinessException)
             {
-                _logger.LogShortenUrlUniqueConstraintViolation(request.UrlOriginal);
-                return await AddShortenedUrl(request);
+                throw;
             }
             catch (Exception e)
             {
@@ -41,25 +57,31 @@ namespace ZipBit.Core.Business.Implementations
             }
         }
 
-        private async Task<CreateShortenedUrlResponse> AddShortenedUrl(CreateShortenedUrlRequest request)
+        public async Task<UrlResponse> GetUrlByCode(GetUrlByCodeRequest request)
         {
             try
             {
-                string urlShortened = GenerateShortenedUrl();
-                long id = await _urlRepository.Add(request.UrlOriginal, urlShortened);
+                var url = await _urlRepository.GetByCode(request.Code);
 
-                var createdShortenedUrl = await _urlRepository.GetById(id);
-                _logger.LogUrlShortened(request.UrlOriginal, createdShortenedUrl.UrlShortened);
+                if (url is null)
+                {
+                    _logger.LogUrlNotFoundByCode(request.Code);
+                    throw new UrlNotFoundException(request.Code);
+                }
 
-                return new CreateShortenedUrlResponse { UrlShortened = createdShortenedUrl.UrlShortened };
+                return new UrlResponse { Url = url.UrlOriginal };
+            }
+            catch (BusinessException)
+            {
+                throw;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, nameof(AddShortenedUrl));
+                _logger.LogError(e, nameof(GetUrlByCode));
                 throw;
             }
         }
 
-        private string GenerateShortenedUrl() => $"{_zipBitConfiguration.Domain}/{Guid.NewGuid().ToString("N").Substring(0, 10)}";
+        private string GenerateCode() => Guid.NewGuid().ToString("N").Substring(0, 10);
     }
 }
