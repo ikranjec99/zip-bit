@@ -2,12 +2,14 @@
 {
     public class Url
     {
-        public DateTime Created { get; set; }
-
         public long Id { get; set; }
 
-        public required string UrlOriginal { get; set; }
+        public required string Code { get; set; }
 
-        public required string UrlShortened { get; set; }
+        public DateTime Created { get; set; }
+
+        public long DomainId { get; set; }
+
+        public required string UrlOriginal { get; set; }
     }
 }

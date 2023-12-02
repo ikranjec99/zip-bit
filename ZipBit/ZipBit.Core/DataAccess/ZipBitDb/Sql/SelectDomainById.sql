@@ -2,9 +2,7 @@
 
  SELECT 
 	[Id], 
-	[Code], 
 	[Created], 
-	[DomainId], 
-	[UrlOriginal] 
- FROM [dbo].[Url]
+	[Name]
+ FROM [dbo].[Domain]
  WHERE [Id] = @Id;
