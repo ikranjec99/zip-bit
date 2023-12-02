@@ -2,6 +2,6 @@
 {
     public interface IZipBitConfiguration
     {
-        string Domain { get; }
+        string DefaultDomain { get; }
     }
 }
