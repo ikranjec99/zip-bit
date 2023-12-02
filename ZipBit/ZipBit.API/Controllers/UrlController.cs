@@ -6,7 +6,7 @@ namespace ZipBit.API.Controllers
 {
     [ApiVersion("1.0")]
     [ApiController]
-    [Route("zipbit/{version:apiVersion}/url")]
+    [Route("api/zipbit/{version:apiVersion}/url")]
     public sealed class UrlController : ControllerBase
     {
         private readonly IUrlHandler _urlHandler;
@@ -19,9 +19,9 @@ namespace ZipBit.API.Controllers
         /// <summary>
         /// Shorten an URL
         /// </summary>
-        /// <returns>Returns URL shortening result</returns>
+        /// <returns>Returns URL shortening result.</returns>
         [HttpPost]
-        public Task<CreateShortenedUrlResponse> PostUrl([FromBody] CreateShortenedUrlRequest request) =>
-            _urlHandler.CreateShortenedUrl(request);
+        public async Task<CreateShortenedUrlResponse> PostUrl([FromBody] CreateShortenedUrlRequest request) =>
+            await _urlHandler.CreateShortenedUrl(request);
     }
 }
