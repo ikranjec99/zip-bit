@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using ZipBit.Core.Business.Exceptions;
 using ZipBit.Core.Business.Interfaces;
 using ZipBit.Core.Business.Models;
