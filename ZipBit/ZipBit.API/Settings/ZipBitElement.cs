@@ -4,6 +4,6 @@ namespace ZipBit.API.Settings
 {
     public class ZipBitElement : IZipBitConfiguration
     {
-        public required string Domain { get; init; }
+        public required string DefaultDomain { get; init; }
     }
 }

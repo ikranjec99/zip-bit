@@ -2,8 +2,10 @@
 {
     public class InsertUrlParameters
     {
-        public required string UrlOriginal { get; set; }
+        public required string Code { get; set; }
 
-        public required string UrlShortened { get; set; }
+        public long DomainId { get; set; }
+
+        public required string UrlOriginal { get; set; }
     }
 }

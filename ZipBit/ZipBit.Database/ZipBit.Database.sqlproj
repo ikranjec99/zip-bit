@@ -61,5 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Url.sql" />
+    <Build Include="Tables\Domain.sql" />
+    <None Include="Scripts\PostDeployment.sql" />
   </ItemGroup>
 </Project>

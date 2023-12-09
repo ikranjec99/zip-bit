@@ -1,4 +1,4 @@
-﻿--DECLARE @Id	BIGINT = 1
+﻿--DECLARE @Code	VARCHAR(10) = '1bb06dfaae'
 
  SELECT 
 	[Id], 
@@ -7,4 +7,4 @@
 	[DomainId], 
 	[UrlOriginal] 
  FROM [dbo].[Url]
- WHERE [Id] = @Id;
+ WHERE [Code] = @Code;
