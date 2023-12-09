@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace ZipBit.Core.Extensions
 {
@@ -13,16 +14,16 @@ namespace ZipBit.Core.Extensions
         public static void LogDomainNotFound(this ILogger logger, long id)
             => logger.LogError($"Domain with id {id} not found.");
 
-        public static void LogError(this ILogger logger, string methodName, Exception e)
+        public static void LogError(this ILogger logger, Exception e, [CallerMemberName] string methodName = null)
             => logger.LogError(e, "{MethodName} failed: {Message}", methodName, e.Message);
 
-        public static void LogUrlNotFoundByCode(this ILogger logger, string code)
+        public static void LogUrlNotFound(this ILogger logger, string code)
             => logger.LogError($"Url with code {code} not found.");
 
         public static void LogTryAddDomain(this ILogger logger, string name)
             => logger.LogInformation($"Trying to add new domain {name}");
 
-        public static void LogTryUrlShortening(this ILogger logger, string code, string url, long domainId)
+        public static void LogTryToShortenUrl(this ILogger logger, string code, string url, long domainId)
             => logger.LogInformation($"Trying to shorten url {url} with domain id {domainId} and generated code {code}.");
 
         public static void LogUrlShortened(this ILogger logger, string originalUrl, string shortenedUrl)

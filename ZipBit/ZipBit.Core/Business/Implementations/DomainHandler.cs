@@ -43,7 +43,7 @@ namespace ZipBit.Core.Business.Implementations
             }
             catch (Exception e)
             {
-                _logger.LogError(e, nameof(CreateDomain));
+                _logger.LogError(e);
                 throw;
             }
         }
