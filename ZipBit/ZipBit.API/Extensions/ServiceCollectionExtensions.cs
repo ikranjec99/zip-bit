@@ -4,7 +4,6 @@ using ZipBit.API.Helpers;
 using ZipBit.API.Settings;
 using ZipBit.Core.Configuration;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using ZipBit.API.Providers;
@@ -21,7 +20,8 @@ namespace ZipBit.API.Extensions
     {
         // Here are handlers from business layer
         private static IServiceCollection AddBusinessLayer(this IServiceCollection services) =>
-            services.AddScoped<IUrlHandler, UrlHandler>();
+            services.AddScoped<IUrlHandler, UrlHandler>()
+                    .AddScoped<IDomainHandler, DomainHandler>();
 
         private static IServiceCollection AddDataAccessLayer(this IServiceCollection services) =>
             services
@@ -97,6 +97,8 @@ namespace ZipBit.API.Extensions
                              .AllowAnyMethod()
                              .AllowAnyHeader();
                          }));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services
                 .AddApiVersioning(setup =>
