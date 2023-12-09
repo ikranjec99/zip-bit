@@ -28,7 +28,7 @@ namespace ZipBit.Core.Business.Implementations
             try
             {
                 string code = GenerateCode();
-                _logger.LogTryUrlShortening(code, request.Url, request.DomainId);
+                _logger.LogTryToShortenUrl(code, request.Url, request.DomainId);
 
                 var domain = await _domainRepository.GetById(request.DomainId);
 
@@ -52,7 +52,7 @@ namespace ZipBit.Core.Business.Implementations
             }
             catch (Exception e)
             {
-                _logger.LogError(e, nameof(CreateShortenedUrl));
+                _logger.LogError(e);
                 throw;
             }
         }
@@ -65,7 +65,7 @@ namespace ZipBit.Core.Business.Implementations
 
                 if (url is null)
                 {
-                    _logger.LogUrlNotFoundByCode(request.Code);
+                    _logger.LogUrlNotFound(request.Code);
                     throw new UrlNotFoundException(request.Code);
                 }
 
@@ -77,7 +77,7 @@ namespace ZipBit.Core.Business.Implementations
             }
             catch (Exception e)
             {
-                _logger.LogError(e, nameof(GetUrlByCode));
+                _logger.LogError(e);
                 throw;
             }
         }
