@@ -3,6 +3,7 @@ using ZipBit.Core.Business.Exceptions;
 using ZipBit.Core.Business.Interfaces;
 using ZipBit.Core.Business.Models;
 using ZipBit.Core.Configuration;
+using ZipBit.Core.Constants;
 using ZipBit.Core.DataAccess.ZipBitDb.Interfaces;
 using ZipBit.Core.Extensions;
 
@@ -12,13 +13,20 @@ namespace ZipBit.Core.Business.Implementations
     {
         private readonly ILogger _logger;
         private readonly IDomainRepository _domainRepository;
+        private readonly IUrlAnalyticEventHandler _urlAnalyticHandler;
         private readonly IUrlRepository _urlRepository;
         private readonly IZipBitConfiguration _zipBitConfiguration;
 
-        public UrlHandler(ILogger<UrlHandler> logger, IDomainRepository domainRepository, IUrlRepository urlRepository, IZipBitConfiguration zipBitConfiguration)
+        public UrlHandler(
+            ILogger<UrlHandler> logger, 
+            IDomainRepository domainRepository, 
+            IUrlAnalyticEventHandler urlAnalyticHandler, 
+            IUrlRepository urlRepository, 
+            IZipBitConfiguration zipBitConfiguration)
         {
             _logger = logger;
             _domainRepository = domainRepository;
+            _urlAnalyticHandler = urlAnalyticHandler;
             _urlRepository = urlRepository;
             _zipBitConfiguration = zipBitConfiguration;
         }
@@ -69,6 +77,8 @@ namespace ZipBit.Core.Business.Implementations
                     _logger.LogUrlNotFound(request.Code);
                     throw new UrlNotFoundException(request.Code);
                 }
+
+                await _urlAnalyticHandler.AddUrlAnalyticEvent((long)UrlAnalyticEventType.UrlOpened, url.Id);
 
                 return new UrlResponse { Url = url.UrlOriginal };
             }

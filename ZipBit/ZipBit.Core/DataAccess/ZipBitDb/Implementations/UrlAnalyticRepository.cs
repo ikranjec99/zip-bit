@@ -7,26 +7,30 @@ using ZipBit.Core.DataAccess.ZipBitDb.Sql;
 
 namespace ZipBit.Core.DataAccess.ZipBitDb.Implementations
 {
-    public class DomainRepository : IDomainRepository
+    public class UrlAnalyticRepository : IUrlAnalyticRepository
     {
         private readonly string _connectionString;
         private readonly ISqlLogger _sqlLogger;
 
-        public DomainRepository(IConnectionStringConfiguration configuration, ISqlLogger sqlLogger)
+        public UrlAnalyticRepository(IConnectionStringConfiguration configuration, ISqlLogger sqlLogger)
         {
             _connectionString = configuration.ConnectionString;
             _sqlLogger = sqlLogger;
         }
 
-        public async Task<Domain> GetById(long id)
+        public async Task Add(long eventTypeId, long urlId)
         {
             using var sqlConnection = new SqlConnection(_connectionString);
-            string sql = ZipBitDbLoader.Load("SelectDomainById");
+            string sql = ZipBitDbLoader.Load("InsertUrlAnalyticEvent");
 
-            var parameters = new SelectDomainByIdParameters { Id = id };
+            var parameters = new InsertUrlAnalyticEventParameters
+            {
+                EventTypeId = eventTypeId,
+                UrlId = urlId
+            };
 
             using var _ = _sqlLogger.Log(sqlConnection, sql, parameters);
-            return await sqlConnection.QuerySingleOrDefaultAsync<Domain>(sql, parameters);
+            await sqlConnection.ExecuteAsync(sql, parameters);
         }
     }
 }
