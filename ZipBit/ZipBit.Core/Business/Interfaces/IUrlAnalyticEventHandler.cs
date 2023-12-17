@@ -2,13 +2,13 @@
 
 namespace ZipBit.Core.Business.Interfaces
 {
-    public interface IDomainHandler
+    public interface IUrlAnalyticEventHandler
     {
         /// <summary>
-        /// Create new domain
+        /// Add new url event to analytics table
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<CreateDomainRequestResponse> CreateDomain(CreateDomainRequest request);
+        Task AddUrlAnalyticEvent(long eventTypeId, long urlId);
     }
 }

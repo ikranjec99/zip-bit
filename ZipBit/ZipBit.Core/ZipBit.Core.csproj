@@ -7,15 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="DataAccess\ZipBitDb\Sql\InsertDomain.sql" />
     <None Remove="DataAccess\ZipBitDb\Sql\InsertUrl.sql" />
+    <None Remove="DataAccess\ZipBitDb\Sql\InsertUrlAnalyticEvent.sql" />
     <None Remove="DataAccess\ZipBitDb\Sql\SelectDomainById.sql" />
     <None Remove="DataAccess\ZipBitDb\Sql\SelectUrlByCode.sql" />
     <None Remove="DataAccess\ZipBitDb\Sql\SelectUrlById.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="DataAccess\ZipBitDb\Sql\InsertDomain.sql">
+    <EmbeddedResource Include="DataAccess\ZipBitDb\Sql\InsertUrlAnalyticEvent.sql">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="DataAccess\ZipBitDb\Sql\SelectDomainById.sql">

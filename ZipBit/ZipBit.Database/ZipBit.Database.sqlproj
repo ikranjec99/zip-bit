@@ -63,5 +63,9 @@
     <Build Include="Tables\Url.sql" />
     <Build Include="Tables\Domain.sql" />
     <None Include="Scripts\PostDeployment.sql" />
+    <Build Include="Tables\UrlAnalyticEvent.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="ZipBit.Database.refactorlog" />
   </ItemGroup>
 </Project>

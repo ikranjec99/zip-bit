@@ -19,12 +19,14 @@ namespace ZipBit.API.Extensions
     public static class ServiceCollectionExtensions
     {
         private static IServiceCollection AddBusinessLayer(this IServiceCollection services) =>
-            services.AddScoped<IUrlHandler, UrlHandler>()
-                    .AddScoped<IDomainHandler, DomainHandler>();
+            services
+                    .AddScoped<IUrlAnalyticEventHandler, UrlAnalyticEventHandler>()
+                    .AddScoped<IUrlHandler, UrlHandler>();
 
         private static IServiceCollection AddDataAccessLayer(this IServiceCollection services) =>
             services
                 .AddSingleton<IDomainRepository, DomainRepository>()
+                .AddSingleton<IUrlAnalyticRepository, UrlAnalyticRepository>()
                 .AddSingleton<IUrlRepository, UrlRepository>()
                 .AddSingleton<ISqlLogger, SqlLogger>();
 
