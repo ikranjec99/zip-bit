@@ -23,7 +23,7 @@ namespace ZipBit.Core.Extensions
         public static void LogTryAddDomain(this ILogger logger, string name)
             => logger.LogInformation($"Trying to add new domain {name}");
 
-        public static void LogTryToShortenUrl(this ILogger logger, string code, string url, long domainId)
+        public static void LogTryShortenUrl(this ILogger logger, string code, string url, long domainId)
             => logger.LogInformation($"Trying to shorten url {url} with domain id {domainId} and generated code {code}.");
 
         public static void LogUrlShortened(this ILogger logger, string originalUrl, string shortenedUrl)

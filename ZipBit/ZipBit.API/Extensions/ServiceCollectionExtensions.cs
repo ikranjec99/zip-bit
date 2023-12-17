@@ -18,10 +18,8 @@ namespace ZipBit.API.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        // Here are handlers from business layer
         private static IServiceCollection AddBusinessLayer(this IServiceCollection services) =>
-            services.AddScoped<IUrlHandler, UrlHandler>()
-                    .AddScoped<IDomainHandler, DomainHandler>();
+            services.AddScoped<IUrlHandler, UrlHandler>();
 
         private static IServiceCollection AddDataAccessLayer(this IServiceCollection services) =>
             services
@@ -29,7 +27,6 @@ namespace ZipBit.API.Extensions
                 .AddSingleton<IUrlRepository, UrlRepository>()
                 .AddSingleton<ISqlLogger, SqlLogger>();
 
-        // Here goes all other defined configuration 
         private static IServiceCollection AddSettings(this IServiceCollection services, AppSettings appSettings)
         {
             if (appSettings is null)
@@ -57,6 +54,7 @@ namespace ZipBit.API.Extensions
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override(nameof(Microsoft), LogEventLevel.Information)
                 .MinimumLevel.Override(nameof(System), LogEventLevel.Information)
+                .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
                 .Destructure.With<NullIgnoringDestructuringPolicy>()
                 .CreateLogger();
