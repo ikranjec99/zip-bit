@@ -28,17 +28,18 @@ namespace ZipBit.Core.Business.Implementations
             try
             {
                 string code = GenerateCode();
-                _logger.LogTryToShortenUrl(code, request.Url, request.DomainId);
+                long defaultDomainId = _zipBitConfiguration.DefaultDomainId;
+                _logger.LogTryShortenUrl(code, request.Url, defaultDomainId);
 
-                var domain = await _domainRepository.GetById(request.DomainId);
+                var domain = await _domainRepository.GetById(defaultDomainId);
 
                 if (domain is null)
                 {
-                    _logger.LogDomainNotFound(request.DomainId);
-                    throw new DomainNotFoundException(request.DomainId);
+                    _logger.LogDomainNotFound(defaultDomainId);
+                    throw new DomainNotFoundException(defaultDomainId);
                 }
 
-                long urlId = await _urlRepository.Add(code, request.DomainId, request.Url);
+                long urlId = await _urlRepository.Add(code, defaultDomainId, request.Url);
                 var url = await _urlRepository.GetById(urlId);
 
                 string urlShortened = $"{domain.Name}/{url.Code}";
